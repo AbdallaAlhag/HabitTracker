@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HabitTracker</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="assets/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="assets/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="assets/favicon-16x16.png"
+    />
+    <link rel="manifest" href="assets//site.webmanifest" />
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="title-container">
+          <img src="assets/favicon-32x32.png" alt="favicon-calendar-icon" />
+          <h1>HabitTracker</h1>
+        </div>
+        <div class="account-container">
+          <div>
+            <i class="fa-solid fa-trophy" style="color: #addaa0"></i>
+            <span id="total-habit-count">20</span>
+          </div>
+          <div class="row">
+            <i class="fa-solid fa-user" style="color: #addaa0"></i>
+            <p>Abdalla</p>
+            <i
+              class="fa-solid fa-sort-down"
+              style="color: rgb(111, 122, 128)"
+            ></i>
+          </div>
+        </div>
+      </div>
+      <div class="habit-container">
+        <div class="habit-container-header">
+          <div class="ghost-container"></div>
+          <div class="hide-button-container"></div>
+          <!-- calendar header -->
+          <div class="calendar">
+            <div class="header">
+              <button class="dayBtn" id="left-btn">
+                <i class="fa-solid fa-angle-left"></i>
+              </button>
+              <h2 id="monthYear"></h2>
+              <button class="dayBtn" id="right-btn">
+                <i class="fa-solid fa-angle-right"></i>
+              </button>
+            </div>
+            <div class="days-header"></div>
+            <!-- calendar header -->
+          </div>
+          <!-- stats header -->
+          <div class="header-stats row">
+            <div class="stat-title" id="first-stat">current streaks</div>
+            <div class="stat-title" id="second-stat">longest streak</div>
+            <div class="stat-title" id="third-stat">total count</div>
+          </div>
+          <!-- stats header -->
+        </div>
+        <div class="habit-container-body">
+          <div class="setting-container">
+            <template id="setting-tempate">
+              <div class="setting-task-container">
+                <button class="edit-task">
+                  <i class="fa-solid fa-pencil"></i>
+                </button>
+                <button class="popup">
+                  <i class="fa-solid fa-palette"> </i>
+                  <span class="popuptext" class="myPopup">
+                    <div
+                      class="popup-colors"
+                      style="background-color: #249c03"
+                    ></div>
+                    <div
+                      class="popup-colors"
+                      style="background-color: #249cff"
+                    ></div>
+                    <div
+                      class="popup-colors"
+                      style="background-color: #ffa503"
+                    ></div>
+                    <div
+                      class="popup-colors"
+                      style="background-color: #ff0000"
+                    ></div>
+                    <div
+                      class="popup-colors"
+                      style="background-color: #a64ca6"
+                    ></div>
+                    <div
+                      class="popup-colors"
+                      style="background-color: #888888"
+                    ></div>
+                    <div
+                      class="popup-colors"
+                      style="background-color: #329999"
+                    ></div>
+                  </span>
+                </button>
+                <button class="drag" draggable="true">
+                  <i class="fa-solid fa-grip-vertical"></i>
+                </button>
+                <p id="habit-name"></p>
+              </div>
+            </template>
+          </div>
+          <!-- calendar -->
+          <div class="days" id="calendarDays"></div>
+          <!-- calendar -->
+          <!-- calendar stats -->
+          <div class="stats-container">
+            <div class="stat-box"></div>
+          </div>
+          <!-- calendar stats -->
+        </div>
+      </div>
+      <footer>
+        <div class="footer-container">
+          <div class="left-side row">
+            <i class="fa-solid fa-lightbulb"></i>
+            <p>Tips</p>
+            <i class="fa-solid fa-display"></i>
+            <p>Web Extensions</p>
+            <i class="fa-solid fa-mobile-screen"></i>
+            <p>Devices</p>
+          </div>
+          <div class="right-side row">
+            <p>Give me feedback please! :-)</p>
+            <p>Contact</p>
+            <p id="site">HabitTracker 2026</p>
+            <p>by Abdalla Alhag</p>
+            <a
+              href="https://app.everyday.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Copy of Everyday 2026 by Joan Boixados</a
+            >
+          </div>
+        </div>
+      </footer>
+      <!-- The Modal -->
+      <div id="myNewModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <div class="header">
+            <h3>NEW HABIT</h3>
+            <span class="close">&times;</span>
+          </div>
+          <div class="task-input-container">
+            <label for="task">HABIT</label><br />
+            <input
+              type="text"
+              class="input-task"
+              name="task"
+              placeholder="e.g. walk the dog"
+            /><br />
+          </div>
+          <div class="task-buttons">
+            <button class="modal-close-btn">CLOSE</button>
+            <button class="add-task-btn">ADD HABIT</button>
+          </div>
+        </div>
+      </div>
+      <!-- modal -->
+      <!-- The Modal -->
+      <div id="myEditModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <div class="header">
+            <h3>EDIT HABIT</h3>
+            <span class="close">&times;</span>
+          </div>
+          <div class="task-input-container">
+            <label for="task">HABIT</label><br />
+            <input
+              type="text"
+              class="input-task"
+              name="task"
+              placeholder="e.g. walk the dog"
+            /><br />
+          </div>
+          <div class="edit-task-buttons">
+            <div class="row">
+              <button id="edit-task-delete-button">
+                <i class="fa-solid fa-x"></i>Delete
+              </button>
+            </div>
+            <div class="task-buttons">
+              <button class="modal-close-btn">CLOSE</button>
+              <button class="edit-task-btn">EDIT HABIT</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- modal -->
+    </div>
+    <script src="main.mjs" type="module"></script>
+    <script
+      src="https://kit.fontawesome.com/f8965f607b.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

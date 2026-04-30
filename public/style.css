@@ -1,0 +1,568 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-light-green: #addaa0;
+  --primary-gray: #7d95ad;
+  --primary-green: #249c03;
+}
+
+body {
+  height: 100vh;
+  font-family:
+    Avenir Next W01,
+    Helvetica;
+  line-height: 1;
+}
+
+.container {
+  font: inherit;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+
+  background-color: rgba(255, 255, 255, 0.2);
+  /* width: 100%; */
+  padding: 1rem;
+  border-radius: 60px;
+  letter-spacing: 0.1rem;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 5px;
+}
+.title-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+.row {
+  display: flex;
+}
+
+.account-container .row {
+  display: flex;
+  gap: 5px;
+}
+.account-container .row:hover {
+  border-bottom: 3px solid var(--primary-green);
+  cursor: pointer;
+}
+
+.account-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+footer {
+  width: 100%;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 10px;
+}
+
+.left-side,
+.right-side {
+  color: var(--primary-green);
+  display: flex;
+  gap: 10px;
+  font-size: 0.8rem;
+}
+
+.left-side p:hover,
+.right-side p:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.right-side #site {
+  color: grey;
+}
+.right-side a {
+  text-decoration: none;
+  color: var(--primary-green);
+}
+
+.right-side a:hover {
+  text-decoration: underline;
+}
+
+h1 {
+  font-size: 2rem;
+}
+button {
+  font-size: 1.2rem;
+  padding: 5px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.habit-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.habit-container-header {
+  display: flex;
+  align-items: flex-end;
+}
+
+.habit-container-body {
+  display: flex;
+  flex-direction: row;
+}
+.ghost-container {
+  min-width: 192px;
+  height: 1rem;
+}
+.ghost-container.hide-buttons {
+  display: none;
+}
+.hide-button-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  min-width: 224px;
+}
+
+.dayBtn {
+  border: none;
+  padding: 5px;
+  border-radius: 0;
+  background-color: #fff;
+  cursor: pointer;
+  color: #7d95ad;
+  font-size: 1.5rem;
+}
+.dayBtn:hover {
+  color: #249c03;
+}
+
+.stats-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stats-box-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 3rem;
+  width: 4rem;
+
+  border: 1px solid #eee;
+}
+.stat-1 {
+  border-left: none;
+}
+.stat-title {
+  width: 4rem;
+  font-size: 0.8rem;
+  color: var(--primary-gray);
+  padding: 5px;
+}
+
+.setting-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: center;
+}
+.setting-task-container {
+  display: flex;
+  align-items: center;
+}
+.setting-task-container > * {
+  width: 4rem;
+  height: 3rem;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 0;
+  color: white;
+}
+.setting-task-container.dragging {
+  opacity: 0.6;
+}
+.setting-task-container.dragging :where(button) {
+  opacity: 0;
+}
+.setting-task-container div i {
+  color: white;
+}
+.setting-task-container p {
+  max-height: 3rem;
+  color: black;
+  width: 14rem;
+  text-align: center;
+  font-size: 0.9rem;
+  padding-top: 1rem;
+  margin: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-right: none;
+}
+
+.setting-task-container button i {
+  transition: opacity 0.2s ease; /* Makes the fade smooth */
+  opacity: 1;
+}
+
+.setting-task-container button:hover i {
+  opacity: 0.7;
+}
+
+#hide-setting-btn {
+  border: none;
+  color: var(--primary-green);
+  background-color: #fff;
+  cursor: pointer;
+  align-self: flex-end;
+  font-size: 1.5rem;
+  margin: 5px;
+}
+
+.setting-task-container.hide-buttons button {
+  display: none;
+}
+
+.add-task-btn {
+  height: 3rem;
+  width: 54%;
+  align-self: flex-end;
+  background-color: #fff;
+  color: #7d95ad;
+  border-radius: 0;
+  border: none;
+  padding: 5px;
+}
+.add-task-btn i {
+  color: #7d95ad; /*nice grey */
+  font-size: 1rem;
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+.add-task-btn:hover {
+  background-color: #249c03;
+  color: #fff;
+}
+.add-task-btn:hover i {
+  color: #fff;
+}
+/* calender */
+.calendar {
+  /* width: 100%; */
+  border: 1px solid #eee;
+}
+
+.grid-row {
+  display: flex;
+  /* gap: 10px; */
+}
+.daily-count {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.daily-count i {
+  font-size: 0.8rem;
+  color: #249c03;
+}
+
+.days-header {
+  display: flex;
+  flex-direction: row;
+}
+.day-header-container {
+  width: 5rem;
+}
+.day-header-container {
+  padding-bottom: 5px;
+  padding-top: 5px;
+  border-bottom: 1px solid white !important;
+}
+.day-header-container:nth-child(odd of .weekend) {
+  border-right: 1px solid white !important;
+}
+
+.current-day {
+  width: 10rem !important;
+}
+.day-header-container.current-day {
+  color: white;
+  background: radial-gradient(circle closest-side, green 95%, transparent 100%);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+@media (max-width: 1024px) {
+  .header,
+  .days-header {
+    /* This limits the grid to 7 columns on Tablet/Mobile */
+    max-width: 700px;
+    width: 100%;
+  }
+}
+.task {
+  /* gap: 10px 0px; */
+  border: 1px solid #eee;
+  height: 3rem;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  /* padding: 4px; */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: transparent !important; /* Hide text by default */
+  transition: all 0.2s ease;
+  font-size: 0.75rem;
+  user-select: none;
+}
+
+.task:not(.is-completed):hover {
+  background-color: var(--task-color) !important;
+  opacity: var(--task-opacity) !important;
+  border: 1px solid var(--task-color) !important;
+  color: white !important;
+}
+
+.task.is-completed:hover {
+  justify-content: center;
+  background-color: white !important;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--task-color) !important;
+  color: var(--task-color) !important; /* Show task name in its theme color */
+}
+
+.days-header-container,
+.task {
+  width: 5rem;
+}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  position: relative;
+  background-color: #fefefe;
+  margin: 5% auto; /* 15% from the top and centered */
+  border: 1px solid #888;
+  width: 35%; /* Could be more or less, depending on screen size */
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  animation-name: animatetop;
+  animation-duration: 0.3s;
+} /* Add Animation */
+@keyframes animatetop {
+  from {
+    top: -300px;
+    opacity: 0;
+  }
+  to {
+    top: 0;
+    opacity: 1;
+  }
+}
+.modal-content .header {
+  border-bottom: 1px solid #7d95ad;
+  padding: 10px;
+}
+.modal-content .header h3 {
+  color: #249c03; /* nice green color */
+}
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.task-input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px;
+}
+.task-input-container input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #249c03;
+}
+
+.task-input-container input:focus {
+  outline: none;
+  border: 1px solid #249c03;
+}
+.edit-task-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px;
+}
+.task-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 10px;
+}
+
+#edit-task-delete-button {
+  background-color: transparent;
+  align-self: flex-start;
+  border: none;
+  cursor: pointer;
+  color: grey;
+  padding: 0;
+  padding-top: 10px;
+  font-size: 0.8rem;
+  text-decoration: underline;
+  letter-spacing: 0;
+}
+
+#edit-task-delete-button:hover {
+  color: red;
+}
+#edit-task-delete-button i {
+  margin-right: 5px;
+}
+#myEditModal .task-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.task-buttons button {
+  background-color: #249c03;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 0;
+  padding: 10px;
+  border: 1px solid #249c03;
+  letter-spacing: 0.2rem;
+}
+.task-buttons button:hover {
+  background-color: #fff;
+  color: #249c03;
+}
+
+.weekend {
+  background-color: rgb(246, 246, 246);
+  border-color: rgb(246, 246, 246);
+}
+
+/* Popup container */
+.popup {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.popuptext {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  align-items: center;
+  padding: 10px;
+}
+
+.popup-colors {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 10%;
+  cursor: pointer;
+}
+
+/* The actual popup (appears on top) */
+.popup .popuptext {
+  visibility: hidden;
+  width: 18rem;
+  height: 3rem;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background-color: white;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 99;
+  bottom: -125%;
+  left: -10%;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 3%;
+
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent transparent white transparent;
+}
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
