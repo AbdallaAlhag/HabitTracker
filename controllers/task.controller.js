@@ -49,7 +49,7 @@ const createTask = async (req, res) => {
 // Get all task
 const getAllTask = async (req, res) => {
   try {
-    const { username } = req.body;
+    const { username } = req.query;
     // although i doubt this will reall matter
     if (!username) {
       return res.status(400).json({
@@ -64,14 +64,14 @@ const getAllTask = async (req, res) => {
       });
     }
 
-    let allTask = await User.findById(userId).select({
+    let tasks = await User.findById(userId).select({
       tasks: 1,
       _id: 0,
     });
-    allTask = allTask.tasks;
+    tasks = tasks.tasks;
     res
       .status(201)
-      .json({ message: "All tasks have been sucessfully found", allTask });
+      .json({ message: "All tasks have been sucessfully found", tasks });
   } catch (error) {
     res.status(500).json({ message: "Internal server error", error });
   }
@@ -80,47 +80,16 @@ const getAllTask = async (req, res) => {
 // Update a task
 const updateTask = async (req, res) => {
   try {
-    const {
-      username,
-      name,
-      id,
-      color,
-      position,
-      totalCount,
-      longestStreak,
-      currentStreak,
-    } = req.body;
-    if (!username || !id) {
+    const { username, task } = req.body;
+    if (!username) {
       return res.status(400).json({
-        message: "Missing info",
+        message: "Missing username",
       });
     }
-    const userDoc = await findId(username);
-    const userId = userDoc?._id;
-    if (!userId) {
-      return res.status(400).json({
-        message: "Can't find user Id",
-      });
-    }
-
     const updatedTask = await User.findOneAndUpdate(
-      {
-        username: username, // Find the user by ID
-        "tasks.id": id, // Find the task inside the array with this task id
-      },
-      {
-        $set: {
-          "tasks.$.id": id,
-          "tasks.$.name": name,
-          "tasks.$.color": color,
-          "tasks.$.position": position,
-          "tasks.$.totalCount": totalCount,
-          "tasks.$.longestStreak": longestStreak,
-          "tasks.$.currentStreak": currentStreak,
-          // Only include the fields you actually want to change
-        },
-      },
-      { new: true }, // Returns the document after the update
+      { username: username },
+      { $set: { tasks: task } },
+      { new: true },
     );
     res
       .status(201)
@@ -170,25 +139,70 @@ const deleteTask = async (req, res) => {
 // {"2026-04-16":[1],"2026-04-15":[1,2]}
 const updateCompletion = async (req, res) => {
   try {
-    console.log("hi");
     const { username, completion } = req.body;
-    console.log(req.body);
     if (!username) {
       return res.status(400).json({
         message: "Missing info",
       });
     }
-    console.log("hi");
     const complete = await User.findOneAndUpdate(
       { username: username },
       { $set: { completions: completion } },
       { new: true },
     );
-    console.log(complete);
     res.status(201).json({ message: "Completions object updated", complete });
   } catch (error) {
     res.status(500).json({ message: "Internal server error", error });
   }
 };
+const getCompletion = async (req, res) => {
+  try {
+    // const { username } = req.body;
 
-export { createTask, getAllTask, updateTask, deleteTask, updateCompletion };
+    const { username } = req.query;
+    // although i doubt this will reall matter
+    if (!username) {
+      return res.status(400).json({
+        message: "Username is required",
+      });
+    }
+    // Find the user by username
+    const user = await User.findOne({ username: username });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "Completion have been sucessfully found",
+      completions: user.completions,
+    });
+    // const userDoc = await findId(username);
+    // const userId = userDoc?._id;
+    // if (!userId) {
+    //   return res.status(400).json({
+    //     message: "Can't find user Id",
+    //   });
+    // }
+    //
+    // let allCompletions = await User.findById(userId).select({
+    //   completions: 1,
+    //   _id: 0,
+    // });
+    // allCompletions = allCompletions.completions;
+    // res.status(201).json({
+    //   message: "Completion have been sucessfully found",
+    //   allCompletions,
+    // });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error", error });
+  }
+};
+export {
+  createTask,
+  getAllTask,
+  updateTask,
+  deleteTask,
+  updateCompletion,
+  getCompletion,
+};

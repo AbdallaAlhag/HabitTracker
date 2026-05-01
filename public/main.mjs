@@ -1,4 +1,10 @@
 import { formatDate, hexToRgba, rgbToHex } from "./helper.mjs";
+import {
+  saveCompletionsToServer,
+  grabCompletionsFromServer,
+  grabTasksFromServer,
+  updateTaskToServer,
+} from "./backendHelper.mjs";
 const monthYear = document.getElementById("monthYear");
 const calendarDays = document.getElementById("calendarDays");
 const dayHeaders = document.querySelector(".days-header");
@@ -36,6 +42,7 @@ let DATE = new Date();
 let dateRange = 21; // 14 days
 let currentEditedTask = null;
 let TOTALCOUNT = 0;
+let USERNAME = "abdalla";
 
 const colors = [
   "#249c03",
@@ -73,18 +80,47 @@ const completions = {
   "2026-04-15": [1, 2], // Both completed yesterday
 };
 
-if (localStorage.getItem("tasks")) {
-  tasks = [...JSON.parse(localStorage.getItem("tasks"))];
+if (USERNAME) {
+  let taskDb = await grabTasksFromServer(USERNAME);
+  if (taskDb) {
+    tasks = [...taskDb];
+  } else {
+    if (localStorage.getItem("tasks")) {
+      tasks = [...JSON.parse(localStorage.getItem("tasks"))];
+    } else {
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+  }
 } else {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+  if (localStorage.getItem("tasks")) {
+    tasks = [...JSON.parse(localStorage.getItem("tasks"))];
+  } else {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }
 }
 
+// username should be a replacement for if signed in check
 const savedData = localStorage.getItem("completions");
-if (savedData) {
-  const parsedData = JSON.parse(savedData);
-  Object.assign(completions, parsedData);
+if (USERNAME) {
+  let completionDb = await grabCompletionsFromServer(USERNAME);
+  if (completionDb) {
+    Object.assign(completions, completionDb);
+    console.log("grabbed from server");
+  } else {
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      Object.assign(completions, parsedData);
+    } else {
+      localStorage.setItem("completions", JSON.stringify(completions));
+    }
+  }
 } else {
-  localStorage.setItem("completions", JSON.stringify(completions));
+  if (savedData) {
+    const parsedData = JSON.parse(savedData);
+    Object.assign(completions, parsedData);
+  } else {
+    localStorage.setItem("completions", JSON.stringify(completions));
+  }
 }
 
 function calculateCompletions(date) {
@@ -104,7 +140,6 @@ function setWeekendElement(date, element) {
 }
 
 function renderCalendar(day = DATE) {
-  console.log("rendering calendar");
   settingContainer.textContent = "";
   calendarDays.textContent = "";
   dayHeaders.textContent = "";
@@ -113,7 +148,6 @@ function renderCalendar(day = DATE) {
   dateRange = getDesiredDateRange();
   calculateCompletions("all");
   totalHabitCount.innerText = TOTALCOUNT;
-  console.log(dateRange);
   monthYear.innerText = DATE.toLocaleDateString("en-US", {
     month: "long",
     year: "numeric",
@@ -280,7 +314,7 @@ function statHelper(task) {
   return [task.longestStreak, streak, totalCount];
 }
 
-function createStats(task, day) {
+function createStats(task) {
   let totalCount = 0;
 
   let streak = 0;
@@ -314,7 +348,7 @@ function createStats(task, day) {
 
   statBox.appendChild(statsRow);
 }
-function updateStats(task, day, stat) {
+function updateStats(task, stat) {
   if (stat == "neg") {
     task.totalCount -= 1;
   } else {
@@ -337,7 +371,7 @@ function isCompleted(date, taskId) {
   return completions[date]?.includes(taskId) || false;
 }
 
-calendarDays.addEventListener("click", (event) => {
+calendarDays.addEventListener("click", async (event) => {
   const taskDiv = event.target.closest(".task");
   let id = Number(taskDiv.dataset.id);
   let currDate = taskDiv.dataset.date;
@@ -369,6 +403,7 @@ calendarDays.addEventListener("click", (event) => {
     // update weekly stats
     updateStats(task, DATE, "neg");
     localStorage.setItem("completions", JSON.stringify(completions));
+    await saveCompletionsToServer(USERNAME, completions);
   } else {
     // Add daily habit task
     taskDiv.classList.add("is-completed");
@@ -389,6 +424,7 @@ calendarDays.addEventListener("click", (event) => {
     // update weekly stats
     updateStats(task, DATE, "pos");
     localStorage.setItem("completions", JSON.stringify(completions));
+    saveCompletionsToServer("abdalla", completions);
   }
 });
 
@@ -402,12 +438,13 @@ function createSettingButtons(task) {
     if (el.classList.contains("popup")) {
       // const colorBtns = el.querySelectorAll(".popup-colors");
       el.addEventListener("click", (e) => openColorPopup(e, task));
-      el.addEventListener("click", (e) => {
+      el.addEventListener("click", async (e) => {
         if (e.target.classList.contains("popup-colors")) {
           let color = e.target.style.backgroundColor;
           task.color = rgbToHex(color);
           renderCalendar();
           localStorage.setItem("tasks", JSON.stringify(tasks));
+          await updateTaskToServer(USERNAME, tasks);
         }
       });
     }
@@ -430,7 +467,7 @@ function createSettingButtons(task) {
         if (statRow) statRow.classList.add("dragging");
       });
 
-      el.addEventListener("dragend", () => {
+      el.addEventListener("dragend", async () => {
         document
           .querySelectorAll(".dragging")
           .forEach((item) => item.classList.remove("dragging"));
@@ -455,6 +492,7 @@ function createSettingButtons(task) {
 
         tasks.sort((a, b) => a.position - b.position);
         localStorage.setItem("tasks", JSON.stringify(tasks));
+        await updateTaskToServer(USERNAME, tasks);
       });
     }
     el.style.backgroundColor = hexToRgba(task.color, opacity);
@@ -497,7 +535,7 @@ window.onclick = function (event) {
   }
 };
 
-addTaskBtn.addEventListener("click", () => {
+addTaskBtn.addEventListener("click", async () => {
   let randomColor = colors[Math.floor(Math.random() * colors.length)];
   if (taskInput.value != "") {
     tasks.push({
@@ -510,16 +548,18 @@ addTaskBtn.addEventListener("click", () => {
       longestStreak: 0,
     });
     localStorage.setItem("tasks", JSON.stringify(tasks));
+    await updateTaskToServer(USERNAME, tasks);
   }
   taskInput.value = "";
   taskModal.style.display = "none";
   renderCalendar();
 });
-editTaskBtn.addEventListener("click", () => {
+editTaskBtn.addEventListener("click", async () => {
   let currentTask = tasks.find((task) => task.id == currentEditedTask);
   if (currentTask != undefined) {
     currentTask.name = editTaskInput.value;
     localStorage.setItem("tasks", JSON.stringify(tasks));
+    await updateTaskToServer(USERNAME, tasks);
   }
   editTaskInput.value = "";
   editModal.style.display = "none";
@@ -535,7 +575,7 @@ rightBtn.addEventListener("click", () => {
   renderCalendar(DATE);
 });
 
-deleteTaskBtn.addEventListener("click", () => {
+deleteTaskBtn.addEventListener("click", async () => {
   let response = confirm("Delete this task?, This will ");
   // currentEditedTask is our current task's id
   if (response) {
@@ -548,7 +588,9 @@ deleteTaskBtn.addEventListener("click", () => {
     renderCalendar();
 
     localStorage.setItem("tasks", JSON.stringify(tasks));
+    await updateTaskToServer(USERNAME, tasks);
     localStorage.setItem("completions", JSON.stringify(completions));
+    await saveCompletionsToServer(USERNAME, completions);
   }
 });
 

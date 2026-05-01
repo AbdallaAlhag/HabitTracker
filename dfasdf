@@ -1,0 +1,23 @@
+[33mcommit 3bb2e08f7cce998833d832c55fbc68a0a3516916[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Abdalla <alhagabdalla@gmail.com>
+Date:   Fri May 1 09:34:37 2026 -0700
+
+    Added update endpoint for completion map with a single update
+
+[33mcommit fe3390dca963349a8955f75b105f7234fc42e4f8[m
+Author: Abdalla <alhagabdalla@gmail.com>
+Date:   Fri May 1 08:53:00 2026 -0700
+
+    crud features for task implemented in backend
+
+[33mcommit 8959cddbe478bc81a8df5d1d9796f85c31ff1a8f[m
+Author: Abdalla <alhagabdalla@gmail.com>
+Date:   Thu Apr 30 09:51:32 2026 -0700
+
+    first real commit
+
+[33mcommit 86d3dff73c2e74fb270830f59ffcb17a2a193a42[m
+Author: Abdalla <alhagabdalla@gmail.com>
+Date:   Thu Apr 30 09:51:00 2026 -0700
+
+    first commit
