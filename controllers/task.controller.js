@@ -166,4 +166,29 @@ const deleteTask = async (req, res) => {
     res.status(500).json({ message: "Internal server error", error });
   }
 };
-export { createTask, getAllTask, updateTask, deleteTask };
+
+// {"2026-04-16":[1],"2026-04-15":[1,2]}
+const updateCompletion = async (req, res) => {
+  try {
+    console.log("hi");
+    const { username, completion } = req.body;
+    console.log(req.body);
+    if (!username) {
+      return res.status(400).json({
+        message: "Missing info",
+      });
+    }
+    console.log("hi");
+    const complete = await User.findOneAndUpdate(
+      { username: username },
+      { $set: { completions: completion } },
+      { new: true },
+    );
+    console.log(complete);
+    res.status(201).json({ message: "Completions object updated", complete });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error", error });
+  }
+};
+
+export { createTask, getAllTask, updateTask, deleteTask, updateCompletion };

@@ -31,5 +31,4 @@ const registerUser = async (req, res) => {
     res.status(500).json({ message: "Error registering user: " + error });
   }
 };
-
 export { registerUser };
