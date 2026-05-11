@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HabitTracker</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="assets/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="assets/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="assets/favicon-16x16.png"
+    />
+    <link rel="manifest" href="assets//site.webmanifest" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="title-container">
+          <a href="/index.html">
+            <img src="assets/favicon-32x32.png" alt="favicon-calendar-icon" />
+          </a>
+          <h1>HabitTracker</h1>
+        </div>
+        <div class="account-container">
+          <div>
+            <i class="fa-solid fa-trophy" style="color: #addaa0"></i>
+            <span id="total-habit-count">20</span>
+          </div>
+          <div class="row">
+            <i class="fa-solid fa-user" style="color: #addaa0"></i>
+            <p id="user-id">Guest</p>
+            <i
+              class="fa-solid fa-sort-down"
+              style="color: rgb(111, 122, 128)"
+            ></i>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="login-container">
+          <div class="login-form">
+            <h1>Log in</h1>
+            <label for="email"></label>
+            <input type="text" id="email" placeholder="Email" required />
+            <label for="email"></label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Password"
+              required
+            />
+            <button id="login">Log in</button>
+            <p style="color: red; padding: 5px" id="error"></p>
+          </div>
+          <div class="login-help">
+            <a href="">Forgot password?</a>
+            <a href="">Sign up</a>
+          </div>
+        </div>
+      </div>
+      <footer>
+        <div class="footer-container">
+          <div class="left-side row">
+            <i class="fa-solid fa-lightbulb"></i>
+            <p>Tips</p>
+            <i class="fa-solid fa-display"></i>
+            <p>Web Extensions</p>
+            <i class="fa-solid fa-mobile-screen"></i>
+            <p>Devices</p>
+          </div>
+          <div class="right-side row">
+            <p>Give me feedback please! :-)</p>
+            <p>Contact</p>
+            <p id="site">HabitTracker 2026</p>
+            <p>by Abdalla Alhag</p>
+            <a
+              href="https://app.everyday.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Copy of Everyday 2026 by Joan Boixados</a
+            >
+          </div>
+        </div>
+      </footer>
+    </div>
+    <script
+      src="https://kit.fontawesome.com/f8965f607b.js"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module">
+      import { loginUser } from "./backendHelper.mjs";
+      const loginBtn = document.getElementById("login");
+      const email = document.getElementById("email");
+      const password = document.getElementById("password");
+      const errorMsg = document.getElementById("error");
+
+      loginBtn.addEventListener("click", async () => {
+        if (!email.value || !password.value) {
+          return;
+        }
+        try {
+          let result = await loginUser(email.value, password.value);
+          console.log(result);
+          if (result && result.user) {
+            localStorage.setItem("user", JSON.stringify(result.user));
+            window.location.href = "index.html";
+          } else {
+            errorMsg.innerHTML = "Invalid credentials";
+            setTimeout(() => {
+              errorMsg.innerHTML = "";
+            }, 3000);
+          }
+        } catch (e) {
+          console.log("Login error: ", e);
+        }
+      });
+    </script>
+  </body>
+</html>

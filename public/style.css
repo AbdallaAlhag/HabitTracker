@@ -566,3 +566,65 @@ button {
     opacity: 1;
   }
 }
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  gap: 10px;
+}
+.login-container input,
+.login-container button {
+  width: 100%;
+  height: 4rem;
+  padding: 10px;
+  margin: 5px;
+  background-color: #e8f0fe;
+  border: 2px solid var(--primary-gray);
+}
+
+.login-container input:focus {
+  outline: none;
+  border: 2px solid var(--primary-green);
+}
+.login-container button {
+  border: 2px solid var(--primary-green);
+  background-color: var(--primary-green);
+  border-radius: 0px;
+}
+.login-container button:hover {
+  background-color: white;
+  color: var(--primary-green);
+}
+.login-help {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--primary-green);
+}
+.login-help a {
+  text-decoration: none;
+  color: var(--primary-green);
+}
+.login-help a:hover {
+  text-decoration: underline;
+}
+
+#auth-btn {
+  background-color: #249c03;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 0;
+  padding: 10px;
+  border: 1px solid #249c03;
+  letter-spacing: 0.2rem;
+  font-size: 0.7rem;
+  padding-left: 5px;
+}
+#auth-btn:hover {
+  background-color: white;
+  color: var(--primary-green);
+}

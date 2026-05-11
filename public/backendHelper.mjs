@@ -109,9 +109,64 @@ async function updateTaskToServer(username, task) {
     return null;
   }
 }
+
+async function loginUser(email, password) {
+  try {
+    const response = await fetch("http://localhost:4000/api/v1/users/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+
+    // if (!response.ok) {
+    //   const errorData = await response.json();
+    //   throw new Error(errorData.message || "Login failed");
+    // }
+
+    // If success, you can choose to return the data or just true
+    // return await response.json();
+    let responseJson = await response.json();
+    console.log(responseJson.message);
+    return responseJson;
+  } catch (error) {
+    console.error("Login failed:", error.message);
+    return null;
+  }
+}
+async function logoutUser(email) {
+  try {
+    const response = await fetch("http://localhost:4000/api/v1/users/logout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Login failed");
+    }
+
+    // If success, you can choose to return the data or just true
+    // return await response.json();
+    let responseJson = await response.json();
+    console.log(responseJson.message);
+    return true;
+  } catch (error) {
+    console.error("Login failed:", error.message);
+    return null;
+  }
+}
+
 export {
   saveCompletionsToServer,
   grabCompletionsFromServer,
   grabTasksFromServer,
   updateTaskToServer,
+  loginUser,
+  logoutUser,
 };

@@ -29,7 +29,9 @@
     <div class="container">
       <div class="header">
         <div class="title-container">
-          <img src="assets/favicon-32x32.png" alt="favicon-calendar-icon" />
+          <a href="/index.html">
+            <img src="assets/favicon-32x32.png" alt="favicon-calendar-icon" />
+          </a>
           <h1>HabitTracker</h1>
         </div>
         <div class="account-container">
@@ -39,12 +41,13 @@
           </div>
           <div class="row">
             <i class="fa-solid fa-user" style="color: #addaa0"></i>
-            <p>Abdalla</p>
+            <p id="user-id">Guest</p>
             <i
               class="fa-solid fa-sort-down"
               style="color: rgb(111, 122, 128)"
             ></i>
           </div>
+          <button id="auth-btn">LOG OUT</button>
         </div>
       </div>
       <div class="habit-container">

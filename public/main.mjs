@@ -4,6 +4,7 @@ import {
   grabCompletionsFromServer,
   grabTasksFromServer,
   updateTaskToServer,
+  logoutUser,
 } from "./backendHelper.mjs";
 const monthYear = document.getElementById("monthYear");
 const calendarDays = document.getElementById("calendarDays");
@@ -37,12 +38,14 @@ const statBox = document.querySelector(".stat-box");
 const habitContainerHeader = document.querySelector(".habit-container-header");
 const hideButtonContainer = document.querySelector(".hide-button-container");
 
+const authBtn = document.getElementById("auth-btn");
+const userId = document.getElementById("user-id");
 // This is our global date probably should be all caps
 let DATE = new Date();
 let dateRange = 21; // 14 days
 let currentEditedTask = null;
 let TOTALCOUNT = 0;
-let USERNAME = "abdalla";
+let USER = null;
 
 const colors = [
   "#249c03",
@@ -80,8 +83,34 @@ const completions = {
   "2026-04-15": [1, 2], // Both completed yesterday
 };
 
-if (USERNAME) {
-  let taskDb = await grabTasksFromServer(USERNAME);
+if (localStorage.getItem("user")) {
+  USER = JSON.parse(localStorage.getItem("user"));
+  userId.innerHTML = USER.username;
+}
+
+if (USER) {
+  const newAuthBtn = authBtn.cloneNode(true);
+  authBtn.replaceWith(newAuthBtn);
+  newAuthBtn.innerHTML = "Logout";
+
+  newAuthBtn.addEventListener("click", async () => {
+    await logoutUser(USER.email);
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+    let id = document.getElementById("user-id");
+    id.innerHTML = "Guest";
+  });
+} else {
+  const newAuthBtn = authBtn.cloneNode(true);
+  authBtn.replaceWith(newAuthBtn);
+  newAuthBtn.innerHTML = "Login";
+  newAuthBtn.addEventListener("click", () => {
+    window.location.href = "login.html";
+  });
+}
+
+if (USER) {
+  let taskDb = await grabTasksFromServer(USER.username);
   if (taskDb) {
     tasks = [...taskDb];
   } else {
@@ -101,8 +130,8 @@ if (USERNAME) {
 
 // username should be a replacement for if signed in check
 const savedData = localStorage.getItem("completions");
-if (USERNAME) {
-  let completionDb = await grabCompletionsFromServer(USERNAME);
+if (USER) {
+  let completionDb = await grabCompletionsFromServer(USER.username);
   if (completionDb) {
     Object.assign(completions, completionDb);
     console.log("grabbed from server");
@@ -403,7 +432,9 @@ calendarDays.addEventListener("click", async (event) => {
     // update weekly stats
     updateStats(task, DATE, "neg");
     localStorage.setItem("completions", JSON.stringify(completions));
-    await saveCompletionsToServer(USERNAME, completions);
+    if (USER) {
+      await saveCompletionsToServer(USER.username, completions);
+    }
   } else {
     // Add daily habit task
     taskDiv.classList.add("is-completed");
@@ -444,7 +475,9 @@ function createSettingButtons(task) {
           task.color = rgbToHex(color);
           renderCalendar();
           localStorage.setItem("tasks", JSON.stringify(tasks));
-          await updateTaskToServer(USERNAME, tasks);
+          if (USER) {
+            await updateTaskToServer(USER.username, tasks);
+          }
         }
       });
     }
@@ -492,7 +525,9 @@ function createSettingButtons(task) {
 
         tasks.sort((a, b) => a.position - b.position);
         localStorage.setItem("tasks", JSON.stringify(tasks));
-        await updateTaskToServer(USERNAME, tasks);
+        if (USER) {
+          await updateTaskToServer(USER.username, tasks);
+        }
       });
     }
     el.style.backgroundColor = hexToRgba(task.color, opacity);
@@ -548,7 +583,9 @@ addTaskBtn.addEventListener("click", async () => {
       longestStreak: 0,
     });
     localStorage.setItem("tasks", JSON.stringify(tasks));
-    await updateTaskToServer(USERNAME, tasks);
+    if (USER) {
+      await updateTaskToServer(USER.username, tasks);
+    }
   }
   taskInput.value = "";
   taskModal.style.display = "none";
@@ -559,7 +596,9 @@ editTaskBtn.addEventListener("click", async () => {
   if (currentTask != undefined) {
     currentTask.name = editTaskInput.value;
     localStorage.setItem("tasks", JSON.stringify(tasks));
-    await updateTaskToServer(USERNAME, tasks);
+    if (USER) {
+      await updateTaskToServer(USER.username, tasks);
+    }
   }
   editTaskInput.value = "";
   editModal.style.display = "none";
@@ -588,9 +627,11 @@ deleteTaskBtn.addEventListener("click", async () => {
     renderCalendar();
 
     localStorage.setItem("tasks", JSON.stringify(tasks));
-    await updateTaskToServer(USERNAME, tasks);
     localStorage.setItem("completions", JSON.stringify(completions));
-    await saveCompletionsToServer(USERNAME, completions);
+    if (USER) {
+      await updateTaskToServer(USER.username, tasks);
+      await saveCompletionsToServer(USER.username, completions);
+    }
   }
 });
 
