@@ -87,7 +87,7 @@ if (localStorage.getItem("user")) {
   USER = JSON.parse(localStorage.getItem("user"));
   userId.innerHTML = USER.username;
 }
-
+console.log("user", USER);
 if (USER) {
   const newAuthBtn = authBtn.cloneNode(true);
   authBtn.replaceWith(newAuthBtn);
@@ -378,6 +378,7 @@ function createStats(task) {
   statBox.appendChild(statsRow);
 }
 function updateStats(task, stat) {
+  console.log(stat);
   if (stat == "neg") {
     task.totalCount -= 1;
   } else {
@@ -423,14 +424,15 @@ calendarDays.addEventListener("click", async (event) => {
     countDiv.dataset.count = Number(countDiv.dataset.count) - 1;
     countDiv.innerText = countDiv.dataset.count;
     // updateTotal Count =
-    totalHabitCount.innerText = TOTALCOUNT - 1;
+    TOTALCOUNT--;
+    totalHabitCount.innerText = TOTALCOUNT;
     // update completions and save to local
     completions[currDate] = completions[currDate].filter((item) => item != id);
     if (completions[currDate].length === 0) {
       delete completions[currDate];
     }
     // update weekly stats
-    updateStats(task, DATE, "neg");
+    updateStats(task, "neg");
     localStorage.setItem("completions", JSON.stringify(completions));
     if (USER) {
       await saveCompletionsToServer(USER.username, completions);
@@ -447,15 +449,16 @@ calendarDays.addEventListener("click", async (event) => {
     countDiv.dataset.count = Number(countDiv.dataset.count) + 1;
     countDiv.innerText = countDiv.dataset.count;
     // updateTotal Count =
-    totalHabitCount.innerText = TOTALCOUNT + 1;
+    TOTALCOUNT++;
+    totalHabitCount.innerText = TOTALCOUNT;
     // update completions and save to local
     completions[currDate] == undefined
       ? (completions[currDate] = [id])
       : completions[currDate]?.push(id);
     // update weekly stats
-    updateStats(task, DATE, "pos");
+    updateStats(task, "pos");
     localStorage.setItem("completions", JSON.stringify(completions));
-    saveCompletionsToServer("abdalla", completions);
+    if (USER) await saveCompletionsToServer("abdalla", completions);
   }
 });
 
