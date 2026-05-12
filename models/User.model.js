@@ -20,18 +20,42 @@ const userSchema = Schema(
     },
     password: { type: String, required: true, minLength: 5 },
     // Tasks as an array of objects
-    tasks: [
-      {
-        id: Number,
-        name: String,
-        color: String,
-        position: Number,
-        totalCount: { type: Number, default: 0 },
-        longestStreak: { type: Number, default: 0 },
-        currentStreak: { type: Number, default: 0 },
-      },
-    ],
-
+    // tasks: [
+    //   {
+    //     id: Number,
+    //     name: String,
+    //     color: String,
+    //     position: Number,
+    //     totalCount: { type: Number, default: 0 },
+    //     longestStreak: { type: Number, default: 0 },
+    //     currentStreak: { type: Number, default: 0 },
+    //   },
+    // ],
+    tasks: {
+      type: [
+        {
+          id: Number, // Note: Consider using mongoose.Schema.Types.ObjectId if you want auto-generated IDs
+          name: String,
+          color: String,
+          position: Number,
+          totalCount: { type: Number, default: 0 },
+          longestStreak: { type: Number, default: 0 },
+          currentStreak: { type: Number, default: 0 },
+        },
+      ],
+      // This array will automatically populate upon user registration
+      default: [
+        {
+          id: 1,
+          name: "Welcome! Complete your first task",
+          color: "#4CAF50",
+          position: 1,
+          totalCount: 0,
+          longestStreak: 0,
+          currentStreak: 0,
+        },
+      ],
+    },
     // Completions using a Map for date-based lookup
     // Map of strings (dates) to arrays of numbers (task IDs)
     completions: {

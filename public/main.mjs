@@ -615,6 +615,7 @@ rightBtn.addEventListener("click", () => {
 });
 
 deleteTaskBtn.addEventListener("click", async () => {
+  if (tasks.length == 1) return;
   let response = confirm("Delete this task?, This will ");
   // currentEditedTask is our current task's id
   if (response) {
