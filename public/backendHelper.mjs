@@ -1,7 +1,10 @@
+// const API_URL = "http://localhost:4000";
+const API_URL = "habittracker-production-cbdb.up.railway.app/4000";
 async function saveCompletionsToServer(username, obj) {
   try {
     const response = await fetch(
-      "http://localhost:4000/api/v1/habits/updateCompletion",
+      // "http://localhost:4000/api/v1/habits/updateCompletion",
+      `${API_URL}/api/v1/habits/updateCompletion`,
       {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -29,7 +32,7 @@ async function grabCompletionsFromServer(username) {
   try {
     // 1. Convert the username into a query string
     const params = new URLSearchParams({ username });
-    const url = `http://localhost:4000/api/v1/habits/getCompletion?${params}`;
+    const url = `${API_URL}/api/v1/habits/getCompletion?${params}`;
 
     // 2. Fetch using GET with NO body
     const response = await fetch(url, {
@@ -57,7 +60,7 @@ async function grabTasksFromServer(username) {
   try {
     // 1. Convert the username into a query string
     const params = new URLSearchParams({ username });
-    const url = `http://localhost:4000/api/v1/habits/getTask?${params}`;
+    const url = `${API_URL}/api/v1/habits/getTask?${params}`;
 
     // 2. Fetch using GET with NO body
     const response = await fetch(url, {
@@ -82,17 +85,14 @@ async function grabTasksFromServer(username) {
 }
 async function updateTaskToServer(username, task) {
   try {
-    const response = await fetch(
-      "http://localhost:4000/api/v1/habits/updateTask",
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username,
-          task,
-        }),
-      },
-    );
+    const response = await fetch(`${API_URL}/api/v1/habits/updateTask`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username,
+        task,
+      }),
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -112,7 +112,7 @@ async function updateTaskToServer(username, task) {
 
 async function loginUser(email, password) {
   try {
-    const response = await fetch("http://localhost:4000/api/v1/users/login", {
+    const response = await fetch(`${API_URL}/api/v1/users/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -138,7 +138,7 @@ async function loginUser(email, password) {
 }
 async function logoutUser(email) {
   try {
-    const response = await fetch("http://localhost:4000/api/v1/users/logout", {
+    const response = await fetch(`${API_URL}/api/v1/users/logout`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -163,18 +163,15 @@ async function logoutUser(email) {
 }
 async function registerUser(username, email, password) {
   try {
-    const response = await fetch(
-      "http://localhost:4000/api/v1/users/register",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username,
-          email,
-          password,
-        }),
-      },
-    );
+    const response = await fetch(`${API_URL}/api/v1/users/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username,
+        email,
+        password,
+      }),
+    });
 
     // if (!response.ok) {
     //   const errorData = await response.json();

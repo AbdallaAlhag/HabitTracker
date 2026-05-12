@@ -7,18 +7,27 @@ import taskRouter from "./routes/task.route.js";
 
 const app = express();
 app.use(express.json());
-app.use(express.static(path.join(path.resolve(), "public")));
-// All cors during dev
-app.use(cors());
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(path.resolve(), "public", "login.html"));
+});
+app.get("/", (req, res) => {
+  res.sendFile(path.join(path.resolve(), "public", "index.html"));
+});
+app.get("/signup", (req, res) => {
+  res.sendFile(path.join(path.resolve(), "public", "signup.html"));
+});
 
-// production
-// const corsOptions = {
-//   origin: "http://localhost:3000",
-// };
-// app.use(cors(corsOptions));
+app.use(express.static(path.join(path.resolve(), "public")));
+
+if (process.env.NODE_ENV !== "production") {
+  app.use(cors()); // production
+}
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/habits", taskRouter);
 // example route: http://localhost:4000/api/v1/users/register
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 export default app;

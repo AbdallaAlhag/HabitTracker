@@ -28,7 +28,7 @@
     <div class="container">
       <div class="header">
         <div class="title-container">
-          <a href="/index.html">
+          <a href="/">
             <img src="assets/favicon-32x32.png" alt="favicon-calendar-icon" />
           </a>
           <h1>HabitTracker</h1>
@@ -73,7 +73,7 @@
           <span style="color: red; padding: 5px" id="error"></span>
           <div class="login-help">
             <a href="">Forgot password?</a>
-            <a href="/signup.html">Sign up</a>
+            <a href="/signup">Sign up</a>
           </div>
         </div>
       </div>
@@ -123,7 +123,7 @@
           console.log(result);
           if (result && result.user) {
             localStorage.setItem("user", JSON.stringify(result.user));
-            window.location.href = "index.html";
+            window.location.href = "/";
           } else {
             errorMsg.innerHTML = "Invalid credentials";
             setTimeout(() => {

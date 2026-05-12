@@ -96,7 +96,7 @@ if (USER) {
   newAuthBtn.addEventListener("click", async () => {
     await logoutUser(USER.email);
     localStorage.removeItem("user");
-    window.location.href = "login.html";
+    window.location.href = "/login";
     let id = document.getElementById("user-id");
     id.innerHTML = "Guest";
   });
@@ -105,7 +105,7 @@ if (USER) {
   authBtn.replaceWith(newAuthBtn);
   newAuthBtn.innerHTML = "Login";
   newAuthBtn.addEventListener("click", () => {
-    window.location.href = "login.html";
+    window.location.href = "/login";
   });
 }
 
