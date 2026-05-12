@@ -161,7 +161,35 @@ async function logoutUser(email) {
     return null;
   }
 }
+async function registerUser(username, email, password) {
+  try {
+    const response = await fetch(
+      "http://localhost:4000/api/v1/users/register",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+        }),
+      },
+    );
 
+    // if (!response.ok) {
+    //   const errorData = await response.json();
+    //   throw new Error(errorData.message || "Login failed");
+    // }
+
+    // If success, you can choose to return the data or just true
+    // return await response.json();
+    let responseJson = await response.json();
+    return responseJson;
+  } catch (error) {
+    console.error("Register failed:", error.message);
+    return null;
+  }
+}
 export {
   saveCompletionsToServer,
   grabCompletionsFromServer,
@@ -169,4 +197,5 @@ export {
   updateTaskToServer,
   loginUser,
   logoutUser,
+  registerUser,
 };

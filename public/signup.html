@@ -51,13 +51,21 @@
       <div class="container">
         <div class="login-container">
           <form class="login-form">
-            <h1>Log in</h1>
+            <h1>Start doing it every day!</h1>
+            <label for="name"></label>
+            <input
+              type="text"
+              id="username"
+              placeholder="Username"
+              autocomplete="username"
+              required
+            />
             <label for="email"></label>
             <input
               type="text"
               id="email"
               placeholder="Email"
-              autocomplete="username"
+              autocomplete="email"
               required
             />
             <label for="email"></label>
@@ -65,15 +73,14 @@
               type="password"
               id="password"
               placeholder="Password"
-              autocomplete="current-password"
+              autocomplete="new-password"
               required
             />
-            <button type="submit" id="login">Log in</button>
+            <button type="submit" id="signupBtn">Sign up</button>
           </form>
           <span style="color: red; padding: 5px" id="error"></span>
           <div class="login-help">
-            <a href="">Forgot password?</a>
-            <a href="/signup.html">Sign up</a>
+            <a href="/login.html">Log in</a>
           </div>
         </div>
       </div>
@@ -107,31 +114,56 @@
       crossorigin="anonymous"
     ></script>
     <script type="module">
-      import { loginUser } from "./backendHelper.mjs";
-      const loginForm = document.querySelector(".login-form");
+      import { registerUser } from "./backendHelper.mjs";
+      const signupBtn = document.getElementById("signupBtn");
+      const username = document.getElementById("username");
       const email = document.getElementById("email");
       const password = document.getElementById("password");
       const errorMsg = document.getElementById("error");
+      const signupForm = document.querySelector(".login-form");
 
-      loginForm.addEventListener("click", async (event) => {
+      signupForm.addEventListener("click", async (event) => {
         event.preventDefault();
-        if (!email.value || !password.value) {
+        if (!username.value || !email.value || !password.value) {
+          return;
+        }
+        const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (pattern.test(email.value) == false) {
+          errorMsg.innerHTML = "Invalid email format";
+          clearErrorMsg();
+          return;
+        }
+        if (
+          username.value.length < 5 ||
+          email.value.length < 5 ||
+          password.value.length < 5
+        ) {
+          errorMsg.innerHTML =
+            "Username, email, and password must be at least 5 characters long";
+          clearErrorMsg();
           return;
         }
         try {
-          let result = await loginUser(email.value, password.value);
-          console.log(result);
+          let result = await registerUser(
+            username.value,
+            email.value,
+            password.value,
+          );
           if (result && result.user) {
             localStorage.setItem("user", JSON.stringify(result.user));
             window.location.href = "index.html";
           } else {
-            errorMsg.innerHTML = "Invalid credentials";
-            setTimeout(() => {
-              errorMsg.innerHTML = "";
-            }, 3000);
+            errorMsg.innerHTML = result.message;
+            clearErrorMsg();
           }
         } catch (e) {
-          console.log("Login error: ", e);
+          console.log("Register error: ", e);
+        }
+
+        function clearErrorMsg() {
+          setTimeout(() => {
+            errorMsg.innerHTML = "";
+          }, 3000);
         }
       });
     </script>
