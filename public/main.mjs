@@ -87,7 +87,6 @@ if (localStorage.getItem("user")) {
   USER = JSON.parse(localStorage.getItem("user"));
   userId.innerHTML = USER.username;
 }
-console.log("user", USER);
 if (USER) {
   const newAuthBtn = authBtn.cloneNode(true);
   authBtn.replaceWith(newAuthBtn);
@@ -378,7 +377,6 @@ function createStats(task) {
   statBox.appendChild(statsRow);
 }
 function updateStats(task, stat) {
-  console.log(stat);
   if (stat == "neg") {
     task.totalCount -= 1;
   } else {

@@ -2,8 +2,12 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 
+import dotenv from "dotenv";
 import userRouter from "./routes/user.route.js";
 import taskRouter from "./routes/task.route.js";
+dotenv.config({
+  path: "./.env",
+});
 
 const app = express();
 app.use(express.json());
